@@ -1,0 +1,15 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": ["env.d.ts", "src/**/*", "vuetify/**/*"],
+  "resolve": {
+    "extensions": [".ts", ".tsx", ".js", ".jsx", ".vue"]
+  },
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/components/*": ["./src/components/*", "./src/components/*.vue"],
+      "@/*": ["./src/*"]
+    }
+  }
+}
