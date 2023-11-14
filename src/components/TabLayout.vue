@@ -24,9 +24,9 @@ const { ID, NAME, URL } = LINK_ENTITY_KEYS
 
 const DATA: LINK_ITEM[] = [
   {
-    [NAME]: '4PDA',
+    [NAME]: '',
     [ID]: 'mecjhrsxc',
-    [URL]: 'https://4pda.to/'
+    [URL]: ''
   },
   {
     [NAME]: 'Gmail',
@@ -44,9 +44,9 @@ const DATA: LINK_ITEM[] = [
     [URL]: 'https://rozetka.com.ua'
   },
   {
-    [NAME]: 'Tracker',
+    [NAME]: '',
     [ID]: 'vpl5tkequ',
-    [URL]: 'https://rutracker.org/forum'
+    [URL]: ''
   },
   {
     [NAME]: 'Google',
@@ -54,9 +54,9 @@ const DATA: LINK_ITEM[] = [
     [URL]: 'https://www.google.com'
   },
   {
-    [NAME]: 'lostFilm',
+    [NAME]: '',
     [ID]: 'v1e09nrmi',
-    [URL]: 'https://www.lostfilm.tv'
+    [URL]: ''
   },
   {
     [NAME]: 'UkrSib',
