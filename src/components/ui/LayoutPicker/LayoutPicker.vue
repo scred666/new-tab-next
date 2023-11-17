@@ -5,7 +5,7 @@
     @mouseleave="hoverCell = DEFAULT_HOVER_CELL"
     @mouseover="onMouseOver"
   >
-    <v-tooltip activator="parent" location="right" offset="8">{{ currentGrid }}</v-tooltip>
+    <VTooltip activator="parent" location="right" offset="8">{{ currentGrid }}</VTooltip>
     <label
       v-for="item in GRID"
       :key="item.index"
@@ -14,12 +14,14 @@
         'lp-LayoutPicker_Cell-active': isItemActive({ item }),
         'lp-LayoutPicker_Cell-exact-active': isItemExactActive({ item })
       }"
+      :data-test-id="CELL_ITEM_TEST_ID"
       :for="`cell-${item.index}`"
       class="lp-LayoutPicker_Cell"
     >
       <input
         :id="`cell-${item.index}`"
         v-model="localSelectedGrid"
+        :data-test-id="CELL_ITEM_RADIO_TEST_ID"
         :value="item.index"
         hidden
         name="grid-picker"
@@ -34,6 +36,7 @@ defineOptions({
   name: 'LayoutPicker',
   inheritAttrs: false
 })
+
 import isEmpty from 'lodash/isEmpty'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import type { Ref, ComputedRef, PropType } from 'vue'
@@ -48,6 +51,10 @@ import {
   selectedGridValidator
 } from '@/components/ui/LayoutPicker/helpers.js'
 import type { GRID_CELL } from '@/components/ui/LayoutPicker/helpers.js'
+import {
+  CELL_ITEM_RADIO_TEST_ID,
+  CELL_ITEM_TEST_ID
+} from '@/components/ui/LayoutPicker/test-helpers.js'
 
 const props = defineProps({
   modelValue: {
@@ -58,7 +65,9 @@ const props = defineProps({
   }
 })
 
-const emit = defineEmits(['update:model-value'])
+const emit = defineEmits<{
+  (e: 'update:model-value', id: number): void
+}>()
 
 const localSelectedGrid = computed<number>({
   get: () => props.modelValue,
