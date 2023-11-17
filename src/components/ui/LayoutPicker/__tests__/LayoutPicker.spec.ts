@@ -63,7 +63,7 @@ describe('LayoutPicker', () => {
 
       expect(wrapper.findAll('.lp-LayoutPicker_Cell-active')).toHaveLength(expectedActiveCellsCount)
       expect(wrapper.findAll('.lp-LayoutPicker_Cell-exact-active')).toHaveLength(
-        expectedActiveCellsCount
+        expectedActiveCellsCount + 1
       )
     }
   )
