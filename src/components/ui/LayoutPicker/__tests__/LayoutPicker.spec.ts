@@ -48,7 +48,7 @@ describe('LayoutPicker', () => {
     expect(wrapper.findAllByTestId(CELL_ITEM_TEST_ID)).toHaveLength(GRID_CELLS_COUNT)
   })
 
-  const testCases = [...Array(GRID_CELLS_COUNT).keys()].map((i: number) => (i += 1))
+  const testCases = [...Array(GRID_CELLS_COUNT).keys()].map((i: number) => i + 1)
 
   test.each(testCases)(
     `renders correct count of active grid cells if modelValue is %i`,
@@ -63,7 +63,7 @@ describe('LayoutPicker', () => {
 
       expect(wrapper.findAll('.lp-LayoutPicker_Cell-active')).toHaveLength(expectedActiveCellsCount)
       expect(wrapper.findAll('.lp-LayoutPicker_Cell-exact-active')).toHaveLength(
-        expectedActiveCellsCount + 8
+        expectedActiveCellsCount + 1
       )
     }
   )
