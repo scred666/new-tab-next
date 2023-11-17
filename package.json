@@ -44,11 +44,6 @@
     "yorkie": "^2.0.0"
   },
   "gitHooks": {
-    "pre-commit": "lint-staged && yarn run test:unit"
-  },
-  "lint-staged": {
-    "*.{js,jsx,cjs,mjs,ts,tsx,cts,mts,vue}": [
-      "eslint --fix"
-    ]
+    "pre-commit": "eslint --fix && vitest --no-watch"
   }
 }
