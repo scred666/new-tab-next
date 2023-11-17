@@ -16,12 +16,12 @@ defineOptions({
 import { DEFAULT_GRID_ID, getCellBySelectedGrid } from '@/components/ui/LayoutPicker/helpers.js'
 import type { GRID_CELL } from '@/components/ui/LayoutPicker/helpers.js'
 import { LINK_ENTITY_KEYS, SETTINGS_ENTITY_KEYS } from '@/utils/entity-keys.js'
-import type { LINK_ITEM } from '@/utils/link-item.js'
-import type { LINKS_SETTINGS } from '@/utils/links-settings.js'
 import { uid } from '@/utils/uid.js'
 
 import LinkItem from '@/components/ui/LinkItem.vue'
 import SettingsModal from '@/components/ui/SettingsModal.vue'
+import type { LINK_ITEM } from '@/utils/link-item'
+import type { LINKS_SETTINGS } from '@/utils/links-settings'
 
 const { ID, NAME, URL } = LINK_ENTITY_KEYS
 

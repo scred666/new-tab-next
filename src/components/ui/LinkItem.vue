@@ -14,8 +14,9 @@ import type { PropType } from 'vue'
 import { Ripple as vRipple } from 'vuetify/directives'
 
 import { LINK_ENTITY_KEYS, SETTINGS_ENTITY_KEYS } from '@/utils/entity-keys.js'
-import type { LINK_ITEM } from '@/utils/link-item.js'
-import type { LINKS_SETTINGS } from '@/utils/links-settings.js'
+
+import type { LINK_ITEM } from '@/utils/link-item'
+import type { LINKS_SETTINGS } from '@/utils/links-settings'
 
 const { NAME, URL } = LINK_ENTITY_KEYS
 

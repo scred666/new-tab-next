@@ -41,10 +41,10 @@ import { VDialog } from 'vuetify/components/VDialog'
 import { VSlider } from 'vuetify/components/vSlider'
 
 import { SETTINGS_ENTITY_KEYS } from '@/utils/entity-keys.js'
-import type { LINKS_SETTINGS } from '@/utils/links-settings.js'
 
 import FormField from '@/components/ui/FormField/FormField.vue'
 import LayoutPicker from '@/components/ui/LayoutPicker/LayoutPicker.vue'
+import type { LINKS_SETTINGS } from '@/utils/links-settings'
 
 const props = defineProps({
   settings: {
