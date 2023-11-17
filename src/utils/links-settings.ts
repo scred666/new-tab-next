@@ -1,3 +1,6 @@
+import { SETTINGS_ENTITY_KEYS } from '@/utils/entity-keys'
+
 export type LINKS_SETTINGS = {
-  opacity: number
+  [SETTINGS_ENTITY_KEYS.OPACITY]: number
+  [SETTINGS_ENTITY_KEYS.GRID]: number
 }

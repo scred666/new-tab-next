@@ -5,5 +5,12 @@ export enum LINK_ENTITY_KEYS {
 }
 
 export enum SETTINGS_ENTITY_KEYS {
-  OPACITY = 'opacity'
+  OPACITY = 'opacity',
+  GRID = 'grid'
+}
+
+export enum LAYOUT_PICKER_ENTITY_KEYS {
+  INDEX = 'index',
+  ROW = 'row',
+  COLUMN = 'column'
 }

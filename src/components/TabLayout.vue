@@ -1,21 +1,24 @@
 <template>
   <section class="tl-Layout">
     <SettingsModal v-model:settings="settings" />
-    <LinkItem v-for="link in DATA" :key="link.id" :link="link" :settings="settings" />
+    <LinkItem v-for="link in filteredData" :key="link.id" :link="link" :settings="settings" />
   </section>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import type { Ref } from 'vue'
+import { computed, ref } from 'vue'
+import type { Ref, ComputedRef } from 'vue'
 
 defineOptions({
   name: 'TabLayout'
 })
 
+import { DEFAULT_GRID_ID, getCellBySelectedGrid } from '@/components/ui/LayoutPicker/helpers.js'
+import type { GRID_CELL } from '@/components/ui/LayoutPicker/helpers.js'
 import { LINK_ENTITY_KEYS, SETTINGS_ENTITY_KEYS } from '@/utils/entity-keys.js'
 import type { LINK_ITEM } from '@/utils/link-item.js'
 import type { LINKS_SETTINGS } from '@/utils/links-settings.js'
+import { uid } from '@/utils/uid.js'
 
 import LinkItem from '@/components/ui/LinkItem.vue'
 import SettingsModal from '@/components/ui/SettingsModal.vue'
@@ -70,8 +73,33 @@ const DATA: LINK_ITEM[] = [
   }
 ]
 
+const PLUS_ITEM: LINK_ITEM = {
+  [NAME]: '+',
+  [ID]: uid(),
+  [URL]: ''
+}
+
 const settings: Ref<LINKS_SETTINGS> = ref({
-  [SETTINGS_ENTITY_KEYS.OPACITY]: 100
+  [SETTINGS_ENTITY_KEYS.OPACITY]: 100,
+  [SETTINGS_ENTITY_KEYS.GRID]: DEFAULT_GRID_ID
+})
+
+const cellBySelectedGrid = computed(() => {
+  return getCellBySelectedGrid({
+    selectedGridId: settings.value[SETTINGS_ENTITY_KEYS.GRID]
+  })
+}) as ComputedRef<GRID_CELL>
+
+const availableLinksCount = computed<number>(() => {
+  const { row, column } = cellBySelectedGrid.value
+  return row * column
+})
+
+const filteredData = computed<LINK_ITEM[]>(() => {
+  return [...Array(availableLinksCount.value)].map((_, index) => {
+    const link = DATA[index]
+    return link || PLUS_ITEM
+  })
 })
 </script>
 
@@ -85,7 +113,8 @@ const settings: Ref<LINKS_SETTINGS> = ref({
   background-position: center;
 
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(v-bind('cellBySelectedGrid.column'), 1fr);
+  grid-template-rows: repeat(v-bind('cellBySelectedGrid.row'), 1fr);
   padding: 80px;
   gap: 40px;
 }
