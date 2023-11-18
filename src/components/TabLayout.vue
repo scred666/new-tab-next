@@ -1,7 +1,7 @@
 <template>
   <section class="tl-Layout">
     <SettingsModal v-model:settings="settings" />
-    <LinkItem v-for="link in filteredData" :key="link.id" :link="link" :settings="settings" />
+    <AppLinkItem v-for="link in filteredData" :key="link.id" :link="link" :settings="settings" />
   </section>
 </template>
 
@@ -13,19 +13,22 @@ defineOptions({
   name: 'TabLayout'
 })
 
-import { DEFAULT_GRID_ID, getCellBySelectedGrid } from '@/components/ui/LayoutPicker/helpers.js'
-import type { GRID_CELL } from '@/components/ui/LayoutPicker/helpers.js'
+import {
+  DEFAULT_SELECTED_LAYOUT_ID,
+  getCellBySelectedLayout
+} from '@/components/ui/LayoutPicker/helpers.js'
+import type { GridCell } from '@/components/ui/LayoutPicker/helpers.js'
 import { LINK_ENTITY_KEYS, SETTINGS_ENTITY_KEYS } from '@/utils/entity-keys.js'
 import { uid } from '@/utils/uid.js'
 
-import LinkItem from '@/components/ui/LinkItem.vue'
+import AppLinkItem from '@/components/ui/LinkItem.vue'
 import SettingsModal from '@/components/ui/SettingsModal.vue'
-import type { LINK_ITEM } from '@/utils/link-item'
-import type { LINKS_SETTINGS } from '@/utils/links-settings'
+import type { LinkItem } from '@/utils/link-item'
+import type { LinksSettings } from '@/utils/links-settings'
 
 const { ID, NAME, URL } = LINK_ENTITY_KEYS
 
-const DATA: LINK_ITEM[] = [
+const DATA: LinkItem[] = [
   {
     [NAME]: '',
     [ID]: 'mecjhrsxc',
@@ -73,29 +76,29 @@ const DATA: LINK_ITEM[] = [
   }
 ]
 
-const PLUS_ITEM: LINK_ITEM = {
+const PLUS_ITEM: LinkItem = {
   [NAME]: '+',
   [ID]: uid(),
   [URL]: ''
 }
 
-const settings: Ref<LINKS_SETTINGS> = ref({
+const settings: Ref<LinksSettings> = ref({
   [SETTINGS_ENTITY_KEYS.OPACITY]: 100,
-  [SETTINGS_ENTITY_KEYS.GRID]: DEFAULT_GRID_ID
+  [SETTINGS_ENTITY_KEYS.GRID]: DEFAULT_SELECTED_LAYOUT_ID
 })
 
 const cellBySelectedGrid = computed(() => {
-  return getCellBySelectedGrid({
-    selectedGridId: settings.value[SETTINGS_ENTITY_KEYS.GRID]
+  return getCellBySelectedLayout({
+    selectedLayoutId: settings.value[SETTINGS_ENTITY_KEYS.GRID]
   })
-}) as ComputedRef<GRID_CELL>
+}) as ComputedRef<GridCell>
 
 const availableLinksCount = computed<number>(() => {
   const { row, column } = cellBySelectedGrid.value
   return row * column
 })
 
-const filteredData = computed<LINK_ITEM[]>(() => {
+const filteredData = computed<LinkItem[]>(() => {
   return [...Array(availableLinksCount.value)].map((_, index) => {
     const link = DATA[index]
     return link || PLUS_ITEM

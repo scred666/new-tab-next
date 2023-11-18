@@ -1,5 +1,5 @@
 import { VueWrapper } from '@vue/test-utils'
-import isEmpty from 'lodash/isEmpty'
+import { isEmpty } from 'lodash-es'
 
 export interface ExtendedVueWrapper extends VueWrapper {
   findAllByTestId(id: string): Array<any>
@@ -60,4 +60,9 @@ export const extendedWrapper = (wrapper: VueWrapper): ExtendedVueWrapper => {
       }
     }
   }) as ExtendedVueWrapper
+}
+
+export enum TEST_CASES_KEYS {
+  VALUE = 'value',
+  EXPECTED = 'expected'
 }

@@ -11,7 +11,6 @@
         {{ subtitle }}
       </slot>
     </template>
-
     <template #text>
       <slot />
     </template>
@@ -19,7 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import { VCard } from 'vuetify/components/VCard'
+import { VCard, VCardItem } from 'vuetify/components/VCard'
 
 defineOptions({
   name: 'FormField',
@@ -34,7 +33,7 @@ interface PROPS {
 }
 
 withDefaults(defineProps<PROPS>(), {
-  variant: () => 'tonal'
+  variant: () => 'flat'
 })
 </script>
 

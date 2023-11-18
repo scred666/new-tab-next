@@ -5,9 +5,9 @@
     @mouseleave="hoverCell = DEFAULT_HOVER_CELL"
     @mouseover="onMouseOver"
   >
-    <VTooltip activator="parent" location="right" offset="8">{{ currentGrid }}</VTooltip>
+    <VTooltip activator="parent" location="right" offset="8">{{ currentLayout }}</VTooltip>
     <label
-      v-for="item in GRID"
+      v-for="item in LAYOUT_CELLS"
       :key="item.index"
       :ref="data => setReference(item.index, data as HTMLElement)"
       :class="{
@@ -20,7 +20,7 @@
     >
       <input
         :id="`cell-${item.index}`"
-        v-model="localSelectedGrid"
+        v-model="localModelValue"
         :data-test-id="CELL_ITEM_RADIO_TEST_ID"
         :value="item.index"
         hidden
@@ -37,18 +37,18 @@ defineOptions({
   inheritAttrs: false
 })
 
-import isEmpty from 'lodash/isEmpty'
+import { isEmpty } from 'lodash-es'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import type { Ref, ComputedRef, PropType } from 'vue'
 import { VTooltip } from 'vuetify/components/VTooltip'
 
 import {
-  DEFAULT_CELL_BY_SELECTED_GRID,
+  DEFAULT_CELL_BY_SELECTED_LAYOUT,
   MAX_COLUMNS,
-  DEFAULT_GRID_ID,
-  getCellBySelectedGrid,
-  GRID,
-  selectedGridValidator
+  DEFAULT_SELECTED_LAYOUT_ID,
+  getCellBySelectedLayout,
+  LAYOUT_CELLS,
+  selectedLayoutValidator
 } from '@/components/ui/LayoutPicker/helpers.js'
 import type { GRID_CELL } from '@/components/ui/LayoutPicker/helpers.js'
 import {
@@ -60,8 +60,8 @@ const props = defineProps({
   modelValue: {
     type: Number as PropType<number>,
     required: true,
-    default: DEFAULT_GRID_ID,
-    validator: selectedGridValidator
+    default: DEFAULT_SELECTED_LAYOUT_ID,
+    validator: selectedLayoutValidator
   }
 })
 
@@ -69,7 +69,7 @@ const emit = defineEmits<{
   (e: 'update:model-value', id: number): void
 }>()
 
-const localSelectedGrid = computed<number>({
+const localModelValue = computed<number>({
   get: () => props.modelValue,
   set: (value: number) => {
     emit('update:model-value', value)
@@ -95,19 +95,19 @@ const onMouseOver = (e: Event): void => {
 
   const [index]: [string, HTMLElement] = currentMouseOverCellIndex as [string, HTMLElement]
 
-  hoverCell.value = GRID[Number(index) - 1] as GRID_CELL
+  hoverCell.value = LAYOUT_CELLS[Number(index) - 1] as GRID_CELL
 }
 
-const cellBySelectedGrid = computed(() => {
-  return getCellBySelectedGrid({
-    selectedGridId: props.modelValue
+const cellBySelectedLayout = computed(() => {
+  return getCellBySelectedLayout({
+    selectedLayoutId: props.modelValue
   })
 }) as ComputedRef<GRID_CELL>
 
 const cellForCalculation = computed(() => {
   return isEmpty(hoverCell.value)
-    ? cellBySelectedGrid.value
-    : hoverCell.value || DEFAULT_CELL_BY_SELECTED_GRID
+    ? cellBySelectedLayout.value
+    : hoverCell.value || DEFAULT_CELL_BY_SELECTED_LAYOUT
 }) as ComputedRef<GRID_CELL>
 
 const checkIsItemActive = ({
@@ -121,7 +121,7 @@ const checkIsItemActive = ({
   return item.row <= row && item.column <= column
 }
 const isItemActive = ({ item }: { item: GRID_CELL }): boolean => {
-  if (isEmpty(hoverCell.value) && !cellBySelectedGrid.value) return false
+  if (isEmpty(hoverCell.value) && !cellBySelectedLayout.value) return false
 
   return checkIsItemActive({
     item,
@@ -133,24 +133,24 @@ const isItemExactActive = ({ item }: { item: GRID_CELL }): boolean => {
   if (isEmpty(hoverCell.value)) {
     return checkIsItemActive({
       item,
-      cellForCompare: cellBySelectedGrid.value
+      cellForCompare: cellBySelectedLayout.value
     })
   }
 
   return false
 }
 
-const currentGrid = computed<string>(() => {
-  if (isEmpty(hoverCell.value) && !cellBySelectedGrid.value) return ''
+const currentLayout = computed<string>(() => {
+  if (isEmpty(hoverCell.value) && !cellBySelectedLayout.value) return ''
 
   const { row, column } = cellForCalculation.value
   return `${row} × ${column}`
 })
 
-const validateSelectedGrid = (): void => {
-  const isValidSelectedGrid: boolean = selectedGridValidator(props.modelValue)
+const validateSelectedLayout = (): void => {
+  const isValidSelectedGrid: boolean = selectedLayoutValidator(props.modelValue)
   if (!isValidSelectedGrid) {
-    emit('update:model-value', DEFAULT_GRID_ID)
+    emit('update:model-value', DEFAULT_SELECTED_LAYOUT_ID)
   }
 }
 
@@ -162,7 +162,7 @@ const setReference = (index: number, reference: HTMLElement | null): void => {
 }
 
 onMounted(() => {
-  validateSelectedGrid()
+  validateSelectedLayout()
 })
 
 onBeforeUnmount(() => {

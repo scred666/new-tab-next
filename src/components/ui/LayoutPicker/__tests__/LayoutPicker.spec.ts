@@ -3,10 +3,10 @@ import { describe, it, expect, vi, test } from 'vitest'
 
 import type { GRID_CELL } from '@/components/ui/LayoutPicker/helpers.js'
 import {
-  DEFAULT_CELL_BY_SELECTED_GRID,
-  DEFAULT_GRID_ID,
-  GRID,
-  GRID_CELLS_COUNT
+  DEFAULT_CELL_BY_SELECTED_LAYOUT,
+  DEFAULT_SELECTED_LAYOUT_ID,
+  LAYOUT_CELLS,
+  LAYOUT_CELLS_COUNT
 } from '@/components/ui/LayoutPicker/helpers.js'
 import {
   CELL_ITEM_RADIO_TEST_ID,
@@ -29,7 +29,7 @@ const createComponent = (propsData = {}): ExtendedVueWrapper => {
   return extendedWrapper(
     mount(LayoutPicker, {
       propsData: {
-        modelValue: DEFAULT_GRID_ID,
+        modelValue: DEFAULT_SELECTED_LAYOUT_ID,
         ...propsData
       }
     })
@@ -42,23 +42,23 @@ describe('LayoutPicker', () => {
     expect(wrapper.exists()).toBeTruthy()
   })
 
-  it('renders correct count of grid cells', () => {
+  it('renders correct count of layout cells', () => {
     const wrapper = createComponent()
 
-    expect(wrapper.findAllByTestId(CELL_ITEM_TEST_ID)).toHaveLength(GRID_CELLS_COUNT)
+    expect(wrapper.findAllByTestId(CELL_ITEM_TEST_ID)).toHaveLength(LAYOUT_CELLS_COUNT)
   })
 
-  const testCases = [...Array(GRID_CELLS_COUNT).keys()].map((i: number) => i + 1)
+  const testCases = [...Array(LAYOUT_CELLS_COUNT).keys()].map((i: number) => i + 1)
 
   test.each(testCases)(
-    `renders correct count of active grid cells if modelValue is %i`,
+    `renders correct count of active layout cells if modelValue is %i`,
     (id: number) => {
       const wrapper = createComponent({
         modelValue: id
       })
 
-      const cellById = GRID.find((cell: GRID_CELL) => cell.index === id)
-      const { row, column } = cellById || DEFAULT_CELL_BY_SELECTED_GRID
+      const cellById = LAYOUT_CELLS.find((cell: GRID_CELL) => cell.index === id)
+      const { row, column } = cellById || DEFAULT_CELL_BY_SELECTED_LAYOUT
       const expectedActiveCellsCount: number = row * column
 
       expect(wrapper.findAll('.lp-LayoutPicker_Cell-active')).toHaveLength(expectedActiveCellsCount)
@@ -92,7 +92,7 @@ describe('LayoutPicker', () => {
       })
 
       expect(wrapper.emitted<'update:model-value'>()['update:model-value'][0][0]).toBe(
-        DEFAULT_GRID_ID
+        DEFAULT_SELECTED_LAYOUT_ID
       )
       expect(wrapper.findAll('.lp-LayoutPicker_Cell-active')).toHaveLength(9)
       expect(wrapper.findAll('.lp-LayoutPicker_Cell-exact-active')).toHaveLength(9)
@@ -103,7 +103,7 @@ describe('LayoutPicker', () => {
     const wrapper = createComponent()
     const radioButtons = wrapper.findAllByTestId(CELL_ITEM_RADIO_TEST_ID)
 
-    expect(radioButtons).toHaveLength(GRID_CELLS_COUNT)
+    expect(radioButtons).toHaveLength(LAYOUT_CELLS_COUNT)
 
     radioButtons.at(0).setChecked()
 

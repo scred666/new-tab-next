@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 
 import { uid } from '@/utils/uid.js'
 
-describe('uid.js', () => {
+describe('uid()', () => {
   it('works correctly', () => {
     const spy = vi.spyOn(Math, 'random').mockReturnValue(0.1366613)
     expect(uid()).toBe('4x42i7urt')
