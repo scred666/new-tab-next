@@ -1,28 +1,34 @@
 <template>
   <section class="tl-Layout">
     <SettingsModal v-model:settings="settings" />
-    <LinkItem v-for="link in DATA" :key="link.id" :link="link" :settings="settings" />
+    <AppLinkItem v-for="link in filteredData" :key="link.id" :link="link" :settings="settings" />
   </section>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue'
-import type { Ref } from 'vue'
+import { computed, ref } from 'vue'
+import type { Ref, ComputedRef } from 'vue'
 
 defineOptions({
   name: 'TabLayout'
 })
 
+import {
+  DEFAULT_SELECTED_LAYOUT_ID,
+  getCellBySelectedLayout
+} from '@/components/ui/LayoutPicker/helpers.js'
+import type { GridCell } from '@/components/ui/LayoutPicker/helpers.js'
 import { LINK_ENTITY_KEYS, SETTINGS_ENTITY_KEYS } from '@/utils/entity-keys.js'
-import type { LINK_ITEM } from '@/utils/link-item.js'
-import type { LINKS_SETTINGS } from '@/utils/links-settings.js'
+import { uid } from '@/utils/uid.js'
 
-import LinkItem from '@/components/ui/LinkItem.vue'
+import AppLinkItem from '@/components/ui/LinkItem.vue'
 import SettingsModal from '@/components/ui/SettingsModal.vue'
+import type { LinkItem } from '@/utils/link-item'
+import type { LinksSettings } from '@/utils/links-settings'
 
 const { ID, NAME, URL } = LINK_ENTITY_KEYS
 
-const DATA: LINK_ITEM[] = [
+const DATA: LinkItem[] = [
   {
     [NAME]: '',
     [ID]: 'mecjhrsxc',
@@ -70,8 +76,33 @@ const DATA: LINK_ITEM[] = [
   }
 ]
 
-const settings: Ref<LINKS_SETTINGS> = ref({
-  [SETTINGS_ENTITY_KEYS.OPACITY]: 100
+const PLUS_ITEM: LinkItem = {
+  [NAME]: '+',
+  [ID]: uid(),
+  [URL]: ''
+}
+
+const settings: Ref<LinksSettings> = ref({
+  [SETTINGS_ENTITY_KEYS.OPACITY]: 100,
+  [SETTINGS_ENTITY_KEYS.GRID]: DEFAULT_SELECTED_LAYOUT_ID
+})
+
+const cellBySelectedGrid = computed(() => {
+  return getCellBySelectedLayout({
+    selectedLayoutId: settings.value[SETTINGS_ENTITY_KEYS.GRID]
+  })
+}) as ComputedRef<GridCell>
+
+const availableLinksCount = computed<number>(() => {
+  const { row, column } = cellBySelectedGrid.value
+  return row * column
+})
+
+const filteredData = computed<LinkItem[]>(() => {
+  return [...Array(availableLinksCount.value)].map((_, index) => {
+    const link = DATA[index]
+    return link || PLUS_ITEM
+  })
 })
 </script>
 
@@ -85,7 +116,8 @@ const settings: Ref<LINKS_SETTINGS> = ref({
   background-position: center;
 
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(v-bind('cellBySelectedGrid.column'), 1fr);
+  grid-template-rows: repeat(v-bind('cellBySelectedGrid.row'), 1fr);
   padding: 80px;
   gap: 40px;
 }
