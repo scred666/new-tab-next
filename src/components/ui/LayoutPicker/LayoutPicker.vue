@@ -50,7 +50,7 @@ import {
   LAYOUT_CELLS,
   selectedLayoutValidator
 } from '@/components/ui/LayoutPicker/helpers.js'
-import type { GRID_CELL } from '@/components/ui/LayoutPicker/helpers.js'
+import type { GridCell } from '@/components/ui/LayoutPicker/helpers.js'
 import {
   CELL_ITEM_RADIO_TEST_ID,
   CELL_ITEM_TEST_ID
@@ -76,11 +76,11 @@ const localModelValue = computed<number>({
   }
 })
 
-interface HOVER_CELL extends Partial<GRID_CELL> {}
+interface HoverCell extends Partial<GridCell> {}
 
-const DEFAULT_HOVER_CELL: HOVER_CELL = {}
+const DEFAULT_HOVER_CELL: HoverCell = {}
 
-const hoverCell: Ref<HOVER_CELL> = ref(DEFAULT_HOVER_CELL)
+const hoverCell: Ref<HoverCell> = ref(DEFAULT_HOVER_CELL)
 const onMouseOver = (e: Event): void => {
   const target = e.target as HTMLElement
   if (!target) return
@@ -95,32 +95,32 @@ const onMouseOver = (e: Event): void => {
 
   const [index]: [string, HTMLElement] = currentMouseOverCellIndex as [string, HTMLElement]
 
-  hoverCell.value = LAYOUT_CELLS[Number(index) - 1] as GRID_CELL
+  hoverCell.value = LAYOUT_CELLS[Number(index) - 1] as GridCell
 }
 
 const cellBySelectedLayout = computed(() => {
   return getCellBySelectedLayout({
     selectedLayoutId: props.modelValue
   })
-}) as ComputedRef<GRID_CELL>
+}) as ComputedRef<GridCell>
 
 const cellForCalculation = computed(() => {
   return isEmpty(hoverCell.value)
     ? cellBySelectedLayout.value
     : hoverCell.value || DEFAULT_CELL_BY_SELECTED_LAYOUT
-}) as ComputedRef<GRID_CELL>
+}) as ComputedRef<GridCell>
 
 const checkIsItemActive = ({
   item,
   cellForCompare
 }: {
-  item: GRID_CELL
-  cellForCompare: GRID_CELL
+  item: GridCell
+  cellForCompare: GridCell
 }): boolean => {
   const { row, column } = cellForCompare
   return item.row <= row && item.column <= column
 }
-const isItemActive = ({ item }: { item: GRID_CELL }): boolean => {
+const isItemActive = ({ item }: { item: GridCell }): boolean => {
   if (isEmpty(hoverCell.value) && !cellBySelectedLayout.value) return false
 
   return checkIsItemActive({
@@ -129,7 +129,7 @@ const isItemActive = ({ item }: { item: GRID_CELL }): boolean => {
   })
 }
 
-const isItemExactActive = ({ item }: { item: GRID_CELL }): boolean => {
+const isItemExactActive = ({ item }: { item: GridCell }): boolean => {
   if (isEmpty(hoverCell.value)) {
     return checkIsItemActive({
       item,
