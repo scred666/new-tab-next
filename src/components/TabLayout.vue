@@ -71,7 +71,7 @@ const DATA: LinkItem[] = [
   },
   {
     [NAME]: 'YouTube',
-    [ID]: 'r54s0y14f',
+    [ID]: 'v7qvzhi5c',
     [URL]: 'https://www.youtube.com'
   }
 ]
@@ -99,10 +99,11 @@ const availableLinksCount = computed<number>(() => {
 })
 
 const filteredData = computed<LinkItem[]>(() => {
-  return [...Array(availableLinksCount.value)].map((_, index) => {
-    const link = DATA[index]
-    return link || PLUS_ITEM
-  })
+  if (availableLinksCount.value <= DATA.length) {
+    return [...Array(availableLinksCount.value)].map((_, index) => DATA[index])
+  }
+
+  return [...DATA, PLUS_ITEM]
 })
 </script>
 
